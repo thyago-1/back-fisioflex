@@ -1,15 +1,12 @@
 package com.fisioflexbackend.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 public class PacienteResponse {
     private Long id;
     private String nome;
     private String email;
-
     private String cpf;
     private int idade;
     private double peso;
@@ -17,4 +14,5 @@ public class PacienteResponse {
     private String sexo;
     private String endereco;
     private String telefone;
+    private String tipo;
 }

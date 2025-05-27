@@ -35,6 +35,20 @@ public class ConsultaController {
 
         return consultaRepository.save(consulta);
     }
+    @PutMapping("/{id}")
+    public Consulta atualizarConsulta(@PathVariable Long id, @RequestBody ConsultaDTO dto) {
+        Consulta consulta = consultaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Consulta não encontrada"));
+
+        Paciente paciente = pacienteRepository.findById(dto.getPacienteId())
+                .orElseThrow(() -> new RuntimeException("Paciente não encontrado"));
+
+        consulta.setPaciente(paciente);
+        consulta.setData(LocalDate.parse(dto.getData()));
+        consulta.setHora(LocalTime.parse(dto.getHora()));
+
+        return consultaRepository.save(consulta);
+    }
 
     @GetMapping
     public List<Consulta> listarConsultas() {

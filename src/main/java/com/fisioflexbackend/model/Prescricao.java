@@ -14,7 +14,10 @@ public class Prescricao {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String paciente;
+    @ManyToOne
+    @JoinColumn(name = "paciente_id", nullable = false)
+    private Paciente paciente;
+
     private String descricao;
 
     @Column(length = 1000)

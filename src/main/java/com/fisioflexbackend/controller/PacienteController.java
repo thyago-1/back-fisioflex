@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import com.fisioflexbackend.dto.PacienteLoginRequest;
 import com.fisioflexbackend.dto.PacienteLoginResponse;
 import org.springframework.http.ResponseEntity;
+import com.fisioflexbackend.dto.UsuarioDTO;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,7 +22,7 @@ public class PacienteController {
     @Autowired
     private PacienteRepository pacienteRepository;
 
-    // ✅ Cadastrar paciente usando DTO
+    
     @PostMapping
     public PacienteResponse criar(@RequestBody PacienteRequest request) {
         Paciente paciente = new Paciente();
@@ -36,12 +37,14 @@ public class PacienteController {
         paciente.setEndereco(request.getEndereco());
         paciente.setTelefone(request.getTelefone());
 
+        paciente.setTipo("Paciente");  // ✅ ESSA LINHA É OBRIGATÓRIA!
+
         Paciente salvo = pacienteRepository.save(paciente);
 
         return toResponse(salvo);
     }
 
-    // ✅ Listar pacientes com DTO (sem senha)
+    
     @GetMapping
     public List<PacienteResponse> listarTodos() {
         return pacienteRepository.findAll()
@@ -49,7 +52,7 @@ public class PacienteController {
                 .map(this::toResponse)
                 .collect(Collectors.toList());
     }
-    
+
     @PostMapping("/login")
     public ResponseEntity<?> loginPaciente(@RequestBody PacienteLoginRequest request) {
         Paciente paciente = pacienteRepository.findByCpf(request.getCpf());
@@ -58,10 +61,27 @@ public class PacienteController {
             return ResponseEntity.status(401).body("CPF ou senha incorretos");
         }
 
-        return ResponseEntity.ok(new PacienteLoginResponse(paciente.getNome()));
+        
+        String token = "mock-token";
+
+        
+        UsuarioDTO usuario = new UsuarioDTO(
+                paciente.getId(),
+                paciente.getNome(),
+                paciente.getEmail(),
+                "PACIENTE"
+        );
+
+        
+        PacienteResponse pacienteResponse = toResponse(paciente);
+
+       
+        PacienteLoginResponse response = new PacienteLoginResponse(token, usuario, pacienteResponse);
+
+       
+        return ResponseEntity.ok(response);
     }
-    
-  
+
     private PacienteResponse toResponse(Paciente paciente) {
         PacienteResponse response = new PacienteResponse();
         response.setId(paciente.getId());
@@ -74,6 +94,7 @@ public class PacienteController {
         response.setSexo(paciente.getSexo());
         response.setEndereco(paciente.getEndereco());
         response.setTelefone(paciente.getTelefone());
+        response.setTipo(paciente.getTipo());  // ✅ Aqui!
         return response;
     }
 }
