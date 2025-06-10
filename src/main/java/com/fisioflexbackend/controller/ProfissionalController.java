@@ -20,13 +20,13 @@ public class ProfissionalController {
     @Autowired
     private ProfissionalRepository profissionalRepository;
 
-    // ✅ Listar todos os profissionais
+    // Listar todos os profissionais
     @GetMapping
     public List<Profissional> listarProfissionais() {
         return profissionalRepository.findAll();
     }
 
-    // ✅ Buscar profissional por ID
+    //  Buscar profissional por ID
     @GetMapping("/{id}")
     public ResponseEntity<?> buscarPorId(@PathVariable Long id) {
         Optional<Profissional> profissionalOpt = profissionalRepository.findById(id);
@@ -38,7 +38,7 @@ public class ProfissionalController {
         }
     }
 
-    // ✅ Login do profissional
+    //  Login do profissional
     @PostMapping("/login")
     public ResponseEntity<?> loginProfissional(@RequestBody ProfissionalLoginRequest request) {
         Profissional profissional = profissionalRepository.findByRegistroProfissional(request.getRegistro());
@@ -47,10 +47,10 @@ public class ProfissionalController {
             return ResponseEntity.status(401).body("Registro ou senha incorretos");
         }
 
-        // ✅ Token mock
+        //  Token mock
         String token = "mock-token";
 
-        // ✅ Montar resposta
+        //  Montar resposta
         ProfissionalLoginResponse response = new ProfissionalLoginResponse(
             token,
             profissional.getId(),

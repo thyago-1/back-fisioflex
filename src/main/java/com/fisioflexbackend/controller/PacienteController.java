@@ -94,7 +94,7 @@ public class PacienteController {
         response.setSexo(paciente.getSexo());
         response.setEndereco(paciente.getEndereco());
         response.setTelefone(paciente.getTelefone());
-        response.setTipo(paciente.getTipo());  // ✅ Aqui!
+        response.setTipo(paciente.getTipo()); 
         return response;
     }
 }
